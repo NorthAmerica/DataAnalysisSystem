@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block javascript %}
+    {# JQUERY FILE UPLOAD SCRIPTS #}
+    <script src="{% static 'DAS/bower_components/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'DAS/bower_components/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'DAS/bower_components/jquery-file-upload/jquery.fileupload.js' %}"></script>
+
+    {# PHOTOS PAGE SCRIPTS #}
+    <script src="{% static 'DAS/plugins/progress-bar-upload/progress-bar-upload.js' %}"></script>
+{% endblock javascript %}
+
+{% block main-content %}
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                数据上传
+                <small>Control panel</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Dashboard</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div style="margin-bottom: 20px;">
+                    <button type="button" class="btn btn-primary js-upload-photos">
+                        <span class="glyphicon glyphicon-cloud-upload"></span> 上传TXT文件
+                    </button>
+                    <input id="fileupload" type="file" name="file" multiple
+                           style="display: none;"
+                           data-url="{% url 'das:data_upload' %}"
+                           data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+                </div>
+
+                <table id="gallery" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>已上传的文件列表</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if txts.count != 0 %}
+                        {% for txt in txts %}
+                            <tr>
+                                <td><a href="{{ txt.file.url }}">{{ txt.file.name }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    {% else  %}
+                        <tr>
+                             <td>暂时没有上传的文件</td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+
+                <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Uploading...</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock main-content %}
